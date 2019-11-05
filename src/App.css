@@ -1,3 +1,9 @@
-.App {
+.app {
   min-height: 100vh;
+}
+
+.dark-mode-toggle-container {
+  position: fixed;
+  right: 1em;
+  top: 1em;
 }

@@ -1,0 +1,6 @@
+.tool-menu {
+    position: fixed;
+    top: 1em;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
