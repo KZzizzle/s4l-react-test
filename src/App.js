@@ -4,6 +4,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { IconButton, Box, Tooltip } from '@material-ui/core';
 import { Brightness7, Brightness4 } from '@material-ui/icons';
+import Window from './window/Window';
+import SampleTree from './tree/SampleTree';
 
 import ToolMenu from './tool/ToolMenu'
 
@@ -22,8 +24,11 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={createMuiTheme(this.state.theme)}>
         <CssBaseline />
+        {/* Full screen modeler */}
         <div className="app"></div>
+        {/* Top buttons (tools) */}
         <ToolMenu className="tool-menu" />
+        {/* Top right corner (dark theme) */}
         <Box className="dark-mode-toggle-container">
           <Tooltip title="Toggle dark mode on/off">
             <IconButton onClick={this.toggleDarkMode}>
@@ -35,6 +40,10 @@ class App extends React.Component {
             </IconButton> 
           </Tooltip>
         </Box>
+        {/* Tree */}
+        <Window title="Tree" rndConfig={{ default: { width: 200, height: 200, x: 10, y: 10 } }}>
+          <SampleTree />
+        </Window>
       </ThemeProvider>
     );
   }
