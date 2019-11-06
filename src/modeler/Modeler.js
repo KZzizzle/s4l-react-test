@@ -10,6 +10,11 @@ class Modeler extends React.Component {
     socket.on("img-wsIO", msg => {
       console.log("img-wsIO", msg);
     }, this);
+    socket.emit("userInput", {
+      width: 200,
+      height: 300,
+      type: "OnResize"
+    }, console.log);
   }
   render() {
     return <img src={this.props.src} alt="Remote render" />;
