@@ -17,18 +17,19 @@ function Tree(props) {
       defaultCollapseIcon={<ExpandMore />}
       defaultExpandIcon={<ChevronRight />}
     >
-      <TreeItem nodeId="1" label="Applications">
-        <TreeItem nodeId="2" label="Calendar" />
-        <TreeItem nodeId="3" label="Chrome" />
-        <TreeItem nodeId="4" label="Webstorm" />
+      <TreeItem nodeId="1" label="NeuralNetwork">
+        <TreeItem nodeId="2" label="Axon1" />
+        <TreeItem nodeId="3" label="Axon2" />
+        <TreeItem nodeId="4" label="Axon3" />
       </TreeItem>
-      <TreeItem nodeId="5" label="Documents">
-        <TreeItem nodeId="6" label="Material-UI">
-          <TreeItem nodeId="7" label="src">
-            <TreeItem nodeId="8" label="index.js" />
-            <TreeItem nodeId="9" label="tree-view.js" />
+      <TreeItem nodeId="5" label="Electrode">
+        <TreeItem nodeId="6" label="Cilinder">
+          <TreeItem nodeId="7" label="Shape1">
+            <TreeItem nodeId="8" label="Shape2" />
+            <TreeItem nodeId="9" label="Shape3" />
           </TreeItem>
         </TreeItem>
+        <TreeItem nodeId="10" label="Spline" />
       </TreeItem>
     </TreeView>
   );
