@@ -6,7 +6,7 @@ import { IconButton, Box, Tooltip } from '@material-ui/core';
 import { Brightness7, Brightness4 } from '@material-ui/icons';
 import Window from './window/Window';
 import SampleTree from './tree/SampleTree';
-import Modeler from './modeler/Modeler';
+import RemoteRender from './modeler/RemoteRender';
 
 import ToolMenu from './tool/ToolMenu'
 
@@ -26,9 +26,7 @@ class App extends React.Component {
       <ThemeProvider theme={createMuiTheme(this.state.theme)}>
         <CssBaseline />
         {/* Full screen modeler */}
-        <div className="app">
-          <Modeler/>
-        </div>
+        <RemoteRender />
         {/* Top buttons (tools) */}
         <ToolMenu className="tool-menu" />
         {/* Top right corner (dark theme) */}
