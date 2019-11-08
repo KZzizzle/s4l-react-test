@@ -12,6 +12,7 @@ class RemoteView extends React.Component {
     this.socket = io();
     this.container = React.createRef();
     this.mouseDrag = false;
+    this.blockMouseEvent = false;
     this.state = {
       src: ''
     };
@@ -57,7 +58,7 @@ class RemoteView extends React.Component {
         data.type = "OnMouseButton";
         break;
       case 'mousemove':
-        sendEvent = this.mouseDrag;
+        sendEvent = this.mouseDrag && !this.blockMouseEvent;
         data.type = "OnMouseMove";
         break;
       case 'wheel':
@@ -72,6 +73,10 @@ class RemoteView extends React.Component {
       data.posX = pos.x;
       data.posY = pos.y;
       this.socket.emit('userEvent', data);
+      if (evt.type === 'mousemove') {
+        this.blockMouseEvent = true;
+        setTimeout(() => this.blockMouseEvent = false, 40); // max 25 movement events per second
+      }
     }
   }
 
