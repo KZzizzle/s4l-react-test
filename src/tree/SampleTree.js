@@ -1,19 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { TreeItem, TreeView } from '@material-ui/lab';
 import { ExpandMore, ChevronRight } from '@material-ui/icons';
 
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1
-  },
-});
-
 function Tree(props) {
-  const classes = useStyles();
   return (
     <TreeView
-      className={classes.root}
       defaultCollapseIcon={<ExpandMore />}
       defaultExpandIcon={<ChevronRight />}
     >
