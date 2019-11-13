@@ -42,7 +42,7 @@ class App extends React.Component {
           </Tooltip>
         </Box>
         {/* Tree */}
-        <Window title="Tree" rndConfig={{ default: { width: 200, height: 200, x: 10, y: 10 } }}>
+        <Window title="Tree" rndConfig={{ default: { width: 300, height: 400, x: 10, y: 10 } }}>
           <SampleTree />
         </Window>
       </ThemeProvider>

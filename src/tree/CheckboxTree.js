@@ -8,19 +8,46 @@ import {
   ExpandMore,
   ChevronRight
 } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    '& label:hover': {
+      background: theme.palette.action.hover
+    },
+    '& .rct-text': {
+      '& > label': {
+        display: 'flex',
+        alignItems: 'center',
+        '& > .rct-checkbox': {
+          display: 'flex'
+        }
+      }
+    }
+  }
+}));
+
+const Tree = props => {
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <ExtCheckboxTree {...props} />
+    </div>
+  );
+};
 
 class CheckboxTree extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       checked: [],
-      expanded: [1]
+      expanded: []
     };
   }
   
   render() {
     return (
-      <ExtCheckboxTree
+      <Tree 
         nodes={this.props.nodes}
         checked={this.state.checked}
         expanded={this.state.expanded}
@@ -28,11 +55,11 @@ class CheckboxTree extends React.Component {
         onExpand={expanded => this.setState({expanded})}
         showNodeIcon={false}
         icons={{
-          check: <CheckBox />,
-          uncheck: <CheckBoxOutlineBlank />,
-          halfCheck: <IndeterminateCheckBox />,
-          expandClose: <ChevronRight />,
-          expandOpen: <ExpandMore />
+          check: <CheckBox fontSize='inherit' />,
+          uncheck: <CheckBoxOutlineBlank fontSize='inherit' />,
+          halfCheck: <IndeterminateCheckBox fontSize='inherit' />,
+          expandClose: <ChevronRight fontSize='inherit' />,
+          expandOpen: <ExpandMore fontSize='inherit' />
         }}
       />
     );
