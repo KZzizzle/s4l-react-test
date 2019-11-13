@@ -50,6 +50,12 @@ const Tree = props => {
   );
 };
 
+/**
+ * Wrapper component for react-checkbox-tree.
+ * It adds the posibility to mark a node as loading while fetching some data.
+ * It adds some default configuration.
+ * It uses Material icons to integrate it with the theming and Material look&feel.
+ */
 class CheckboxTree extends React.Component {
   constructor(props) {
     super(props);
