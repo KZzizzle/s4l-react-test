@@ -9,6 +9,7 @@ import {
   ChevronRight
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,8 +21,21 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         '& > .rct-checkbox': {
-          display: 'flex'
+          display: 'flex',
+          '& > :first-child': {
+            // Loading spinner needs to be the first element inside a React.Fragment
+            display: 'none'
+          }
         }
+      }
+    },
+    '& .rct-node.loading > .rct-text > label > .rct-checkbox': {
+      '& > :first-child': {
+        display: 'inline-block'
+      },
+      '& > :nth-child(2)': {
+        // Checkbox needs to be the first element inside a React.Fragment
+        display: 'none'
       }
     }
   }
@@ -55,9 +69,9 @@ class CheckboxTree extends React.Component {
         onExpand={expanded => this.setState({expanded})}
         showNodeIcon={false}
         icons={{
-          check: <CheckBox fontSize='inherit' />,
-          uncheck: <CheckBoxOutlineBlank fontSize='inherit' />,
-          halfCheck: <IndeterminateCheckBox fontSize='inherit' />,
+          check: <React.Fragment><CircularProgress size='inherit' color='default' /><CheckBox fontSize='inherit' /></React.Fragment>,
+          uncheck: <React.Fragment><CircularProgress size='inherit' color='default' /><CheckBoxOutlineBlank fontSize='inherit' /></React.Fragment>,
+          halfCheck: <React.Fragment><CircularProgress size='inherit' color='default' /><IndeterminateCheckBox fontSize='inherit' /></React.Fragment>,
           expandClose: <ChevronRight fontSize='inherit' />,
           expandOpen: <ExpandMore fontSize='inherit' />
         }}

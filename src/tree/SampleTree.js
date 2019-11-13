@@ -8,7 +8,8 @@ const nodes = [{
     { label: 'Axon1', value: 2 },
     { label: 'Axon2', value: 3 },
     { label: 'Axon3', value: 4 }
-  ]
+  ],
+  className: 'loading'
 }, {
   label: 'Electrode',
   value: 5,
