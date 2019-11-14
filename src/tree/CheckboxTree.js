@@ -75,9 +75,9 @@ class CheckboxTree extends React.Component {
         onExpand={expanded => this.setState({expanded})}
         showNodeIcon={false}
         icons={{
-          check: <React.Fragment><CircularProgress size='inherit' color='default' /><CheckBox fontSize='inherit' /></React.Fragment>,
-          uncheck: <React.Fragment><CircularProgress size='inherit' color='default' /><CheckBoxOutlineBlank fontSize='inherit' /></React.Fragment>,
-          halfCheck: <React.Fragment><CircularProgress size='inherit' color='default' /><IndeterminateCheckBox fontSize='inherit' /></React.Fragment>,
+          check: <React.Fragment><CircularProgress size='inherit' color='inherit' /><CheckBox fontSize='inherit' /></React.Fragment>,
+          uncheck: <React.Fragment><CircularProgress size='inherit' color='inherit' /><CheckBoxOutlineBlank fontSize='inherit' /></React.Fragment>,
+          halfCheck: <React.Fragment><CircularProgress size='inherit' color='inherit' /><IndeterminateCheckBox fontSize='inherit' /></React.Fragment>,
           expandClose: <ChevronRight fontSize='inherit' />,
           expandOpen: <ExpandMore fontSize='inherit' />
         }}

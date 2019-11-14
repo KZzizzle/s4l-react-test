@@ -1,5 +1,4 @@
 import React from 'react';
-import { HourglassEmpty } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles({
@@ -23,7 +22,14 @@ const useStyles = makeStyles({
 
 const LoadingIcon = props => {
   const classes = useStyles();
-  return <HourglassEmpty classes={{ root: classes.root }} {...props} />
+  const { icon, ...rest } = props;
+  return React.createElement(
+    icon,
+    {
+      classes: { root: classes.root },
+      ...rest
+    }
+  );
 };
 
 export default LoadingIcon;
