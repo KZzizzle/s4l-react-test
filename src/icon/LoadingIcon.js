@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 })
 
 const LoadingIcon = props => {
-  const classes = useStyles();
+  const classes = useStyles(props);
   const { icon, ...rest } = props;
   return React.createElement(
     icon,

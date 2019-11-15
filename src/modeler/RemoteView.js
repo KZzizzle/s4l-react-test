@@ -1,6 +1,6 @@
 import React from 'react';
 
-import io from "socket.io-client";
+import socket from '../socket/Socket';
 
 
 import RemoteRender from './RemoteRender';
@@ -9,7 +9,6 @@ class RemoteView extends React.Component {
 
   constructor(props) {
     super(props);
-    this.socket = io();
     this.container = React.createRef();
     this.mouseDrag = false;
     this.blockMouseEvent = false;
@@ -72,7 +71,7 @@ class RemoteView extends React.Component {
       const pos = convertPosition(evt.pageX, evt.pageY);
       data.posX = pos.x;
       data.posY = pos.y;
-      this.socket.emit('userEvent', data);
+      socket.emit('userEvent', data);
       if (evt.type === 'mousemove') {
         this.blockMouseEvent = true;
         setTimeout(() => this.blockMouseEvent = false, 40); // max 25 movement events per second
@@ -91,12 +90,13 @@ class RemoteView extends React.Component {
     let timeout = null;
     window.addEventListener('resize', () => {
       clearTimeout(timeout);
+      // Limit sending the resize events to one each 500ms
       timeout = setTimeout(() => {
         const {
           offsetHeight,
           offsetWidth
         } = this.container.current;
-        this.socket.emit('userEvent', {
+        socket.emit('userEvent', {
           width: offsetWidth,
           height: offsetHeight,
           type: "OnResize"
@@ -106,19 +106,19 @@ class RemoteView extends React.Component {
   }
 
   listenSocket() {
-    this.socket.on("connect", () => {
+    socket.on("connect", () => {
       console.log("S4L connected");
       const {
         offsetHeight,
         offsetWidth
       } = this.container.current;
-      this.socket.emit("userEvent", {
+      socket.emit("userEvent", {
         width: offsetWidth,
         height: offsetHeight,
         type: "OnResize"
       });
     }, this);
-    this.socket.on("img-wsIO", msg => {
+    socket.on("img-wsIO", msg => {
       if (msg.image) {
         this.updateSrc(this.arrayBufferToBase64(msg.buffer));
       }
