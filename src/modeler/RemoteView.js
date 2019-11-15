@@ -4,6 +4,7 @@ import socket from '../socket/Socket';
 
 
 import RemoteRender from './RemoteRender';
+import RemotePositioned from './RemotePositioned';
 
 class RemoteView extends React.Component {
 
@@ -27,6 +28,7 @@ class RemoteView extends React.Component {
         onMouseEnter={this.mouseHandler}
         onMouseLeave={this.mouseHandler}>
         <RemoteRender src={this.state.src}/>
+        <RemotePositioned />
       </div>
     );
   }
