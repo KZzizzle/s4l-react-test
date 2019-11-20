@@ -2,7 +2,6 @@ import React from 'react';
 
 import socket from '../socket/Socket';
 
-
 import RemoteRender from './RemoteRender';
 import RemotePositioned from './RemotePositioned';
 
@@ -16,11 +15,30 @@ class RemoteView extends React.Component {
     this.state = {
       src: ''
     };
+    this.socketListeners = {
+      connect: () => {
+        console.log("S4L connected");
+        const {
+          offsetHeight,
+          offsetWidth
+        } = this.container.current;
+        socket.emit("userEvent", {
+          width: offsetWidth,
+          height: offsetHeight,
+          type: "OnResize"
+        });
+      },
+      'img-wsIO': msg => {
+        if (msg.image) {
+          this.updateSrc(this.arrayBufferToBase64(msg.buffer));
+        }
+      }
+    }
   }
 
   render() {
     return (
-      <div className="remote-render" ref={this.container} draggable="false"
+      <div className="full-height" ref={this.container} draggable="false"
         onMouseDown={this.mouseHandler}
         onMouseUp={this.mouseHandler}
         onMouseMove={this.mouseHandler}
@@ -88,7 +106,7 @@ class RemoteView extends React.Component {
   }
 
   componentDidMount() {
-    this.listenSocket();
+    this.addSocketListeners();
     let timeout = null;
     window.addEventListener('resize', () => {
       clearTimeout(timeout);
@@ -107,24 +125,18 @@ class RemoteView extends React.Component {
     });
   }
 
-  listenSocket() {
-    socket.on("connect", () => {
-      console.log("S4L connected");
-      const {
-        offsetHeight,
-        offsetWidth
-      } = this.container.current;
-      socket.emit("userEvent", {
-        width: offsetWidth,
-        height: offsetHeight,
-        type: "OnResize"
-      });
-    }, this);
-    socket.on("img-wsIO", msg => {
-      if (msg.image) {
-        this.updateSrc(this.arrayBufferToBase64(msg.buffer));
-      }
-    }, this);
+  componentWillUnmount() {
+    this.removeSocketListeners();
+  }
+
+  addSocketListeners() {
+    socket.on("connect", this.socketListeners.connect, this);
+    socket.on("img-wsIO", this.socketListeners['img-wsIO'], this);
+  }
+
+  removeSocketListeners() {
+    socket.off("connect", this.socketListeners.connect, this);
+    socket.off("img-wsIO", this.socketListeners['img-wsIO'], this);
   }
   
   arrayBufferToBase64(buffer) {

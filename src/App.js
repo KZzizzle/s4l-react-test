@@ -1,12 +1,17 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
 import './App.css';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { IconButton, Box, Tooltip } from '@material-ui/core';
-import { Brightness7, Brightness4 } from '@material-ui/icons';
 import Window from './window/Window';
 import SampleTree from './tree/SampleTree';
 import RemoteView from './modeler/RemoteView';
+import Menu from './menu/Menu';
+import FormDemo from './form/FormDemo'
 
 import ToolMenu from './tool/ToolMenu'
 
@@ -25,26 +30,25 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={createMuiTheme(this.state.theme)}>
         <CssBaseline />
-        {/* Full screen modeler */}
-        <RemoteView />
-        {/* Top buttons (tools) */}
-        <ToolMenu className="tool-menu" />
-        {/* Top right corner (dark theme) */}
-        <Box className="dark-mode-toggle-container">
-          <Tooltip title="Toggle dark mode on/off">
-            <IconButton onClick={this.toggleDarkMode}>
-              {this.state.theme.palette.type === 'dark' ? (
-                <Brightness7 />
-              ) : (
-                <Brightness4 />
-              )}
-            </IconButton> 
-          </Tooltip>
-        </Box>
-        {/* Tree */}
-        <Window title="Tree" rndConfig={{ default: { width: 300, height: 400, x: 10, y: 10 } }}>
-          <SampleTree />
-        </Window>
+        <Router>
+          {/* Top right corner (menu) */}
+          <Menu toggleDarkModeHandler={this.toggleDarkMode} />
+          <Switch>
+            <Route path='/form-demo'>
+              <FormDemo />
+            </Route>
+            <Route path='/'>
+              {/* Full screen modeler */}
+              <RemoteView />
+              {/* Top buttons (tools) */}
+              <ToolMenu className="tool-menu" />
+              {/* Tree */}
+              <Window title="Tree" rndConfig={{ default: { width: 300, height: 400, x: 10, y: 10 } }}>
+                <SampleTree />
+              </Window>
+            </Route>
+          </Switch>
+        </Router>
       </ThemeProvider>
     );
   }

@@ -15,8 +15,8 @@ class RemotePositioned extends React.Component {
         },
         component2: {
           position: {
-            top: '200px',
-            left: '200px'
+            top: '840px',
+            left: '800px'
           }
         }
       }
@@ -27,7 +27,7 @@ class RemotePositioned extends React.Component {
       <React.Fragment>
         {
           Object.keys(this.state.components).map(key => (
-            <FloatingInput component={TextField} position={this.state.components[key].position} />
+            <FloatingInput key={key} component={TextField} position={this.state.components[key].position} />
           ))
         }
       </React.Fragment>
