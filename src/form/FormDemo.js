@@ -2,17 +2,22 @@ import React from "react";
 import DynamicForm from "./DynamicForm";
 import { makeStyles } from "@material-ui/styles";
 import { TextField } from "@material-ui/core";
+import data from './data';
 
 const useStyles = makeStyles({
   root: {
-    height: "calc(100vh - 5em)",
-    marginTop: "5em",
-    display: "flex",
+    height: 'calc(100vh - 5em)',
+    marginTop: '5em',
+    display: 'flex',
     flexDirection: "row"
   },
   childContainer: {
     flex: 1,
-    padding: "1em"
+    padding: '1em',
+    overflow: 'auto'
+  },
+  textField: {
+    fontFamily: 'monospace',
   }
 });
 
@@ -28,6 +33,7 @@ const Workspace = props => {
 };
 
 const CodeArea = props => {
+  const classes = useStyles();
   return (
     <TextField
       multiline={true}
@@ -35,6 +41,7 @@ const CodeArea = props => {
       label="JSONSchema"
       value={props.schema}
       onChange={props.onChange}
+      InputProps={{ className: classes.textField }}
     />
   );
 };
@@ -42,11 +49,8 @@ const CodeArea = props => {
 class FormDemo extends React.Component {
   constructor(props) {
     super(props);
-    const schema = {
-      object1: null,
-      object2: [1, 2, 3]
-    };
-    const schemaPretty = JSON.stringify(schema, null, '\t');
+    const schema = data;
+    const schemaPretty = JSON.stringify(schema, null, '   ');
     this.state = {
       schema,
       schemaPretty
