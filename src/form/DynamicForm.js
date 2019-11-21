@@ -3,15 +3,16 @@ import { TextField, Container, FormControlLabel, Checkbox, FormGroup, FormLabel 
 
 
 const InputElement = props => {
-  const strPath = stringPath(props.path);
+  const { path, data, givenTitle, title } = props;
+  const strPath = stringPath(path);
   switch (props.type) {
     case 'boolean':
       return (
         <FormControlLabel
           control={
-            <Checkbox value={strPath} />
+            <Checkbox value={strPath} checked={data} />
           }
-          label={props.title}
+          label={title}
         />
       )
     case 'array':
@@ -20,9 +21,10 @@ const InputElement = props => {
       return (
         <TextField
           id={strPath}
-          label={props.title || props.givenTitle}
+          label={title || givenTitle}
           variant='filled'
           margin='dense'
+          value={data}
         />
       );
   }
@@ -42,15 +44,15 @@ const ArrayField = props => {
 }
 
 const ValueUnitField = props => {
-  const { path, properties: { value, unit }, title } = props;
+  const { path, properties: { value, unit }, title, data } = props;
   const valuePath = [...path, 'value'];
   const unitPath = [...path, 'unit'];
   return (
     <div>
       <FormLabel>{title}</FormLabel>
       <FormGroup row>
-        <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' />
-        <InputElement key={stringPath(unitPath)} {...unit} path={unitPath} givenTitle='Unit' />
+        <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' data={data.value} />
+        <InputElement key={stringPath(unitPath)} {...unit} path={unitPath} givenTitle='Unit' data={data.unit} />
       </FormGroup>
     </div>
   )
@@ -58,27 +60,29 @@ const ValueUnitField = props => {
 
 class DynamicForm extends React.Component {
   render() {
+    const { schema, data } = this.props;
     return (
       <Container>
-        <form autoComplete='off'>
+        <form autoomplete='off'>
           <FormGroup>
-            {this.expand(this.props.schema)}
+            {this.expand(schema, data)}
           </FormGroup>
         </form>
       </Container>
     )
   }
-  expand(element, path=[]) {
+  expand(element, data, path=[]) {
     return Object.keys(element).map(key => {
       const current = element[key];
+      const currentData = data[key];
       const newPath = [...path, key];
       if (current.type ==='object') {
         if (isValueUnit(current)) {
-          return <ValueUnitField key={stringPath(newPath)} {...current} path={newPath} />
+          return <ValueUnitField key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
         }
-        return this.expand(current.properties, newPath)
+        return this.expand(current.properties, currentData, newPath)
       }
-      return <InputElement key={stringPath(newPath)} {...current} path={newPath} />
+      return <InputElement key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
     })
   }
 }

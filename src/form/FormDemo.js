@@ -1,6 +1,7 @@
 import React from "react";
 import DynamicForm from "./DynamicForm";
 import { makeStyles } from "@material-ui/styles";
+import schema from './schema';
 import data from './data';
 
 const useStyles = makeStyles({
@@ -31,15 +32,15 @@ const Workspace = props => {
 class FormDemo extends React.Component {
   constructor(props) {
     super(props);
-    const schema = data;
     this.state = {
-      schema
+      schema,
+      data
     };
   }
   render() {
     return (
       <Workspace>
-        <DynamicForm schema={this.state.schema} />
+        <DynamicForm schema={this.state.schema} data={this.state.data} />
       </Workspace>
     );
   }
