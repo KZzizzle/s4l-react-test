@@ -37,7 +37,11 @@ const ArrayField = props => {
         <FormLabel>{props.title}</FormLabel>
       }
       <FormGroup row>
-        is array
+        {
+          props.data.map((value, index) => (
+            <InputElement key={index} {...props} type='string' data={value} />
+          ))
+        }
       </FormGroup>
     </div>
   )
