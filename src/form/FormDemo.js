@@ -1,7 +1,7 @@
 import React from "react";
 import DynamicForm from "./DynamicForm";
 import { makeStyles } from "@material-ui/styles";
-import { TextField } from "@material-ui/core";
+import schema from './schema';
 import data from './data';
 
 const useStyles = makeStyles({
@@ -15,9 +15,6 @@ const useStyles = makeStyles({
     flex: 1,
     padding: '1em',
     overflow: 'auto'
-  },
-  textField: {
-    fontFamily: 'monospace',
   }
 });
 
@@ -32,35 +29,18 @@ const Workspace = props => {
   );
 };
 
-const CodeArea = props => {
-  const classes = useStyles();
-  return (
-    <TextField
-      multiline={true}
-      fullWidth={true}
-      label="JSONSchema"
-      value={props.schema}
-      onChange={props.onChange}
-      InputProps={{ className: classes.textField }}
-    />
-  );
-};
-
 class FormDemo extends React.Component {
   constructor(props) {
     super(props);
-    const schema = data;
-    const schemaPretty = JSON.stringify(schema, null, '   ');
     this.state = {
       schema,
-      schemaPretty
+      data
     };
   }
   render() {
     return (
       <Workspace>
-        <CodeArea schema={this.state.schemaPretty} onChange={evt => this.onSchemaChange(evt.target.value)} />
-        <DynamicForm schema={this.state.schema} />
+        <DynamicForm schema={this.state.schema} data={this.state.data} />
       </Workspace>
     );
   }

@@ -15,7 +15,7 @@ class RemoteView extends React.Component {
     this.state = {
       src: ''
     };
-    this.socketListeners = {
+    this.eventListeners = {
       connect: () => {
         console.log("S4L connected");
         const {
@@ -32,6 +32,21 @@ class RemoteView extends React.Component {
         if (msg.image) {
           this.updateSrc(this.arrayBufferToBase64(msg.buffer));
         }
+      },
+      windowResize: () => {
+        clearTimeout(windowResizeTimeout);
+        // Limit sending the resize events to one each 500ms
+        windowResizeTimeout = setTimeout(() => {
+          const {
+            offsetHeight,
+            offsetWidth
+          } = this.container.current;
+          socket.emit('userEvent', {
+            width: offsetWidth,
+            height: offsetHeight,
+            type: "OnResize"
+          });
+        }, 500);
       }
     }
   }
@@ -106,37 +121,23 @@ class RemoteView extends React.Component {
   }
 
   componentDidMount() {
-    this.addSocketListeners();
-    let timeout = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(timeout);
-      // Limit sending the resize events to one each 500ms
-      timeout = setTimeout(() => {
-        const {
-          offsetHeight,
-          offsetWidth
-        } = this.container.current;
-        socket.emit('userEvent', {
-          width: offsetWidth,
-          height: offsetHeight,
-          type: "OnResize"
-        });
-      }, 500);
-    });
+    this.addListeners();
   }
 
   componentWillUnmount() {
-    this.removeSocketListeners();
+    this.removeListeners();
   }
 
-  addSocketListeners() {
-    socket.on("connect", this.socketListeners.connect, this);
-    socket.on("img-wsIO", this.socketListeners['img-wsIO'], this);
+  addListeners() {
+    window.addEventListener('resize', this.eventListeners.windowResize);
+    socket.on("connect", this.eventListeners.connect, this);
+    socket.on("img-wsIO", this.eventListeners['img-wsIO'], this);
   }
 
-  removeSocketListeners() {
-    socket.off("connect", this.socketListeners.connect, this);
-    socket.off("img-wsIO", this.socketListeners['img-wsIO'], this);
+  removeListeners() {
+    window.removeEventListener('resize', this.eventListeners.windowResize);
+    socket.off("connect", this.eventListeners.connect, this);
+    socket.off("img-wsIO", this.eventListeners['img-wsIO'], this);
   }
   
   arrayBufferToBase64(buffer) {
@@ -149,5 +150,7 @@ class RemoteView extends React.Component {
     return btoa(binary);    
   }
 }
+
+let windowResizeTimeout = null;
 
 export default RemoteView;
