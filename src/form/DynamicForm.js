@@ -22,9 +22,8 @@ const InputElement = props => {
         <TextField
           id={strPath}
           label={title || givenTitle}
-          variant='filled'
-          margin='dense'
           value={data}
+          margin='dense'
         />
       );
   }
@@ -93,6 +92,7 @@ class DynamicForm extends React.Component {
 
 // Util functions
 const stringPath = arrayPath => arrayPath.join('.')
+
 const isValueUnit = object => {
   const keys = Object.keys(object.properties);
   return keys.length === 2 && keys.includes('value') && keys.includes('unit');
