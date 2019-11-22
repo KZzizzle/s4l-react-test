@@ -9,7 +9,8 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  Typography
+  Typography,
+  FormHelperText
 } from '@material-ui/core';
 
 
@@ -63,7 +64,7 @@ const ArrayField = props => {
 }
 
 const ValueUnitField = props => {
-  const { path, properties: { value, unit }, title, data } = props;
+  const { path, properties: { value, unit }, title, data, description } = props;
   const valuePath = [...path, 'value'];
   const unitPath = [...path, 'unit'];
   return (
@@ -73,6 +74,10 @@ const ValueUnitField = props => {
         <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' data={data.value} />
         <InputElement key={stringPath(unitPath)} {...unit} path={unitPath} givenTitle='Unit' data={data.unit} />
       </FormGroup>
+      {
+        description &&
+        <FormHelperText>{description}</FormHelperText>
+      }
     </div>
   )
 }
@@ -83,9 +88,7 @@ class DynamicForm extends React.Component {
     return (
       <Container>
         <form autoomplete='off'>
-          {/* <FormGroup> */}
-            {this.expand(schema, data)}
-          {/* </FormGroup> */}
+          {this.expand(schema, data)}
         </form>
       </Container>
     )
