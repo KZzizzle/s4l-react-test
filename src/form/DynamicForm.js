@@ -1,16 +1,31 @@
 import React from 'react';
-import { TextField, Container, FormControlLabel, Checkbox, FormGroup, FormLabel } from '@material-ui/core';
+import {
+  TextField,
+  Container,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormLabel,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography
+} from '@material-ui/core';
 
 
 const InputElement = props => {
-  const { path, data, givenTitle, title } = props;
+  const { path, data, givenTitle, title, readOnly } = props;
   const strPath = stringPath(path);
   switch (props.type) {
     case 'boolean':
       return (
         <FormControlLabel
           control={
-            <Checkbox value={strPath} checked={data} />
+            <Checkbox
+              value={strPath}
+              checked={data}
+              disabled={readOnly || false}
+            />
           }
           label={title}
         />
@@ -24,6 +39,7 @@ const InputElement = props => {
           label={title || givenTitle}
           value={data}
           margin='dense'
+          disabled={readOnly}
         />
       );
   }
@@ -67,9 +83,9 @@ class DynamicForm extends React.Component {
     return (
       <Container>
         <form autoomplete='off'>
-          <FormGroup>
+          {/* <FormGroup> */}
             {this.expand(schema, data)}
-          </FormGroup>
+          {/* </FormGroup> */}
         </form>
       </Container>
     )
@@ -80,11 +96,25 @@ class DynamicForm extends React.Component {
       const currentData = data[key];
       const newPath = [...path, key];
       if (current.type ==='object') {
+        // If it is an object, expand unless it is the special value-unit case
         if (isValueUnit(current)) {
           return <ValueUnitField key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
         }
-        return this.expand(current.properties, currentData, newPath)
+        // Grouping
+        return (
+          <ExpansionPanel key={stringPath(newPath)} defaultExpanded>
+            <ExpansionPanelSummary>
+              <Typography>{current.title || key}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <FormGroup>
+                {this.expand(current.properties, currentData, newPath)}
+              </FormGroup>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        );
       }
+      // If not an object, it should be already an input
       return <InputElement key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
     })
   }
