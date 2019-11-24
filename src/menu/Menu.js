@@ -1,8 +1,18 @@
 import React from 'react';
+import { connect } from "react-redux";
 import { useLocation, useHistory } from 'react-router-dom';
 import { IconButton, Box, Tooltip } from '@material-ui/core';
 import { Brightness7, Brightness4, Code, Home } from '@material-ui/icons';
+import { toggleDarkModeHandler } from "../redux_stuff/actions";
 import { useTheme } from '@material-ui/core/styles';
+
+const mapDispatchToProps = dispatch => ({
+  toggleDarkModeHandler: () => dispatch(toggleDarkModeHandler())
+});
+
+const mapStateToProps = state => {
+  return {themetype: state.theme.palette.type };
+}
 
 const NavigationButton = props => {
   const location = useLocation();
@@ -27,18 +37,19 @@ const NavigationButton = props => {
 }
 
 const ToggleModeButton = props => {
-  const theme = useTheme();
   return (
-    <Tooltip title="Toggle dark mode on/off">
-      <IconButton onClick={props.toggleDarkModeHandler}>
-        { theme.palette.type === 'dark' ? (
-          <Brightness7 />
-        ) : (
-          <Brightness4 />
-        )}
-      </IconButton> 
-    </Tooltip>
-  );
+      <Box className="dark-mode-toggle-container">
+        <Tooltip title="Toggle dark mode on/off">
+          <IconButton onClick={props.toggleDarkModeHandler}>
+            {props.themetype === 'dark' ? (
+              <Brightness7 />
+            ) : (
+              <Brightness4 />
+            )}
+          </IconButton> 
+        </Tooltip>
+      </Box>
+  )
 }
 
 class Menu extends React.Component {
@@ -46,10 +57,11 @@ class Menu extends React.Component {
     return (
       <Box className="menu-container">
         <NavigationButton />
-        <ToggleModeButton toggleDarkModeHandler={this.props.toggleDarkModeHandler} />
+        <ToggleModeButton toggleDarkModeHandler={this.props.toggleDarkModeHandler} themetype = {this.props.themetype}/>
       </Box>
     )
   }
 }
 
-export default Menu;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

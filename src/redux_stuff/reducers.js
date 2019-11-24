@@ -11,7 +11,6 @@ export const initialState = {
 function rootReducer(state = initialState, action) {
   switch(action.type){
 
-
     case TOGGLE_THEME:
       return Object.assign({}, state, {
         theme: {

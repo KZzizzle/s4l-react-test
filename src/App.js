@@ -14,25 +14,21 @@ import Menu from './menu/Menu';
 import FormDemo from './form/FormDemo'
 
 import ToolMenu from './tool/ToolMenu'
+import { connect } from "react-redux";
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      theme: {
-        palette: {
-          type: 'dark'
-        }
-      }
-    }
   }
   render() {
+
     return (
-      <ThemeProvider theme={createMuiTheme(this.state.theme)}>
+      <ThemeProvider theme={createMuiTheme(this.props.theme)}>
         <CssBaseline />
         <Router>
           {/* Top right corner (menu) */}
-          <Menu toggleDarkModeHandler={this.toggleDarkMode} />
+          <Menu />
           <Switch>
             <Route path='/form-demo'>
               <FormDemo />
@@ -52,15 +48,13 @@ class App extends React.Component {
       </ThemeProvider>
     );
   }
-  toggleDarkMode = () => {
-    this.setState(state => ({
-      theme: {
-        palette: {
-          type: state.theme.palette.type === 'dark' ? 'light' : 'dark'
-        }
-      }
-    }))
-  }
+}
+const mapStateToProps = state => {
+  return {
+    theme: state.theme
+  };
 }
 
-export default App;
+export default connect(mapStateToProps)(App);
+
+
