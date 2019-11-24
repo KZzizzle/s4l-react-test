@@ -1,16 +1,32 @@
 import React from 'react';
-import { TextField, Container, FormControlLabel, Checkbox, FormGroup, FormLabel } from '@material-ui/core';
+import {
+  TextField,
+  Container,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormLabel,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+  FormHelperText
+} from '@material-ui/core';
 
 
 const InputElement = props => {
-  const { path, data, givenTitle, title } = props;
+  const { path, data, givenTitle, title, readOnly } = props;
   const strPath = stringPath(path);
   switch (props.type) {
     case 'boolean':
       return (
         <FormControlLabel
           control={
-            <Checkbox value={strPath} checked={data} />
+            <Checkbox
+              value={strPath}
+              checked={data}
+              disabled={readOnly || false}
+            />
           }
           label={title}
         />
@@ -24,6 +40,7 @@ const InputElement = props => {
           label={title || givenTitle}
           value={data}
           margin='dense'
+          disabled={readOnly}
         />
       );
   }
@@ -47,7 +64,7 @@ const ArrayField = props => {
 }
 
 const ValueUnitField = props => {
-  const { path, properties: { value, unit }, title, data } = props;
+  const { path, properties: { value, unit }, title, data, description } = props;
   const valuePath = [...path, 'value'];
   const unitPath = [...path, 'unit'];
   return (
@@ -57,6 +74,10 @@ const ValueUnitField = props => {
         <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' data={data.value} />
         <InputElement key={stringPath(unitPath)} {...unit} path={unitPath} givenTitle='Unit' data={data.unit} />
       </FormGroup>
+      {
+        description &&
+        <FormHelperText>{description}</FormHelperText>
+      }
     </div>
   )
 }
@@ -67,9 +88,7 @@ class DynamicForm extends React.Component {
     return (
       <Container>
         <form autoomplete='off'>
-          <FormGroup>
-            {this.expand(schema, data)}
-          </FormGroup>
+          {this.expand(schema, data)}
         </form>
       </Container>
     )
@@ -80,11 +99,25 @@ class DynamicForm extends React.Component {
       const currentData = data[key];
       const newPath = [...path, key];
       if (current.type ==='object') {
+        // If it is an object, expand unless it is the special value-unit case
         if (isValueUnit(current)) {
           return <ValueUnitField key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
         }
-        return this.expand(current.properties, currentData, newPath)
+        // Grouping
+        return (
+          <ExpansionPanel key={stringPath(newPath)} defaultExpanded>
+            <ExpansionPanelSummary>
+              <Typography>{current.title || key}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <FormGroup>
+                {this.expand(current.properties, currentData, newPath)}
+              </FormGroup>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        );
       }
+      // If not an object, it should be already an input
       return <InputElement key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
     })
   }
