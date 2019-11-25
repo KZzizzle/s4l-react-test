@@ -14,7 +14,7 @@ import Menu from './menu/Menu';
 import FormDemo from './form/FormDemo'
 
 import ToolMenu from './tool/ToolMenu'
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
 
 class App extends React.Component {
@@ -37,9 +37,9 @@ class App extends React.Component {
               {/* Full screen modeler */}
               <RemoteView />
               {/* Top buttons (tools) */}
-              <ToolMenu className="tool-menu" />
+              <ToolMenu className='tool-menu' />
               {/* Tree */}
-              <Window title="Tree" rndConfig={{ default: { width: 300, height: 400, x: 10, y: 10 } }}>
+              <Window title='Tree' rndConfig={{ default: { width: 300, height: 400, x: 10, y: 10 } }}>
                 <SampleTree />
               </Window>
             </Route>
