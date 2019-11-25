@@ -1,6 +1,8 @@
 import React from 'react';
 import {
-  TextField,
+  FormControl,
+  InputLabel,
+  Input,
   Container,
   FormControlLabel,
   Checkbox,
@@ -12,10 +14,20 @@ import {
   Typography,
   FormHelperText
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
+
+const useStyles = makeStyles(theme => ({
+  control: {
+    paddingBottom: theme.spacing(1.5)
+  },
+  controlContainer: {
+    marginBottom: theme.spacing(-1.5)
+  }
+}));
 
 const InputElement = props => {
-  const { path, data, givenTitle, title, readOnly } = props;
+  const { path, data, givenTitle, title, readOnly, description } = props;
   const strPath = stringPath(path);
   switch (props.type) {
     case 'boolean':
@@ -35,27 +47,36 @@ const InputElement = props => {
       return <ArrayField {...props} />;
     default:
       return (
-        <TextField
-          id={strPath}
-          label={title || givenTitle}
-          value={data}
-          margin='dense'
-          disabled={readOnly}
-        />
+        <FormControl disabled={readOnly || false}>
+          {
+            (title || givenTitle) &&
+            <InputLabel htmlFor={strPath}>{title || givenTitle}</InputLabel>
+          }
+          <Input
+            id={strPath}
+            value={data}
+          />
+          {
+            description &&
+            <FormHelperText>{description}</FormHelperText>
+          }
+        </FormControl>
       );
   }
 }
 
 const ArrayField = props => {
+  const { title, ...propsRest } = props;
+  const classes = useStyles();
   return (
-    <div>
-      { props.title && props.title.length &&
-        <FormLabel>{props.title}</FormLabel>
+    <div className={propsRest.nomargin ? '' : classes.control} >
+      { title && title.length &&
+        <FormLabel>{title}</FormLabel>
       }
       <FormGroup row>
         {
           props.data.map((value, index) => (
-            <InputElement key={index} {...props} type='string' data={value} />
+            <InputElement key={index} {...propsRest} type='string' data={value} />
           ))
         }
       </FormGroup>
@@ -67,11 +88,12 @@ const ValueUnitField = props => {
   const { path, properties: { value, unit }, title, data, description } = props;
   const valuePath = [...path, 'value'];
   const unitPath = [...path, 'unit'];
+  const classes = useStyles();
   return (
-    <div>
+    <div className={classes.control} >
       <FormLabel>{title}</FormLabel>
       <FormGroup row>
-        <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' data={data.value} />
+        <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' data={data.value} nomargin />
         <InputElement key={stringPath(unitPath)} {...unit} path={unitPath} givenTitle='Unit' data={data.unit} />
       </FormGroup>
       {
@@ -80,6 +102,11 @@ const ValueUnitField = props => {
       }
     </div>
   )
+}
+
+const GroupContainer = props => {
+  const classes = useStyles();
+  return <FormGroup className={classes.controlContainer} {...props} />
 }
 
 class DynamicForm extends React.Component {
@@ -110,9 +137,9 @@ class DynamicForm extends React.Component {
               <Typography>{current.title || key}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <FormGroup>
+              <GroupContainer>
                 {this.expand(current.properties, currentData, newPath)}
-              </FormGroup>
+              </GroupContainer>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         );
