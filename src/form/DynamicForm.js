@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormControl,
   InputLabel,
@@ -15,6 +15,8 @@ import {
   FormHelperText
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import useForm, { FormContext, useFormContext } from 'react-hook-form';
+// import { RHFInput } from 'react-hook-form-input';
 
 
 const useStyles = makeStyles(theme => ({
@@ -27,35 +29,68 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const InputElement = props => {
-  const { path, data, givenTitle, title, readOnly, description } = props;
+  const {
+    path,
+    data,
+    givenTitle,
+    title,
+    readOnly,
+    description,
+    nomargin,
+    required = false,
+    arrayIndex = -1
+  } = props;
   const strPath = stringPath(path);
+  const classes = useStyles();
+  const { register, errors } = useFormContext();
+  const [value, setValue] = useState(data);
   switch (props.type) {
     case 'boolean':
       return (
         <FormControlLabel
           control={
             <Checkbox
-              value={strPath}
-              checked={data}
+              checked={value}
               disabled={readOnly || false}
+              inputProps={{
+                ref: register,
+                name: strPath
+              }}
+              onChange={evt => setValue(evt.target.checked)}
             />
           }
+          className={nomargin ? '' : classes.control}
           label={title}
         />
       )
     case 'array':
       return <ArrayField {...props} />;
     default:
+      const withArrayStringPath = strPath + (arrayIndex > -1 ? `[${arrayIndex}]` : '');
       return (
-        <FormControl disabled={readOnly || false}>
+        <FormControl
+          className={nomargin ? '' : classes.control}
+          disabled={readOnly || false}
+          error={(errors && errors[withArrayStringPath] && true) || false}
+        >
           {
             (title || givenTitle) &&
             <InputLabel htmlFor={strPath}>{title || givenTitle}</InputLabel>
           }
           <Input
             id={strPath}
-            value={data}
+            defaultValue={data}
+            inputProps={{
+              ref: register({
+                required: required && 'Required'
+              }),
+              name: withArrayStringPath
+            }}
           />
+          {
+            errors && errors[withArrayStringPath] &&
+            <FormHelperText>{errors[withArrayStringPath].message}</FormHelperText>
+          }
           {
             description &&
             <FormHelperText>{description}</FormHelperText>
@@ -69,14 +104,21 @@ const ArrayField = props => {
   const { title, ...propsRest } = props;
   const classes = useStyles();
   return (
-    <div className={propsRest.nomargin ? '' : classes.control} >
+    <div className={props.nomargin ? '' : classes.control} >
       { title && title.length &&
         <FormLabel>{title}</FormLabel>
       }
       <FormGroup row>
         {
           props.data.map((value, index) => (
-            <InputElement key={index} {...propsRest} type='string' data={value} />
+            <InputElement
+              key={index}
+              {...propsRest}
+              type='string'
+              data={value}
+              nomargin
+              arrayIndex={index}
+            />
           ))
         }
       </FormGroup>
@@ -85,7 +127,7 @@ const ArrayField = props => {
 }
 
 const ValueUnitField = props => {
-  const { path, properties: { value, unit }, title, data, description } = props;
+  const { path, properties: { value, unit }, title, data, description, required } = props;
   const valuePath = [...path, 'value'];
   const unitPath = [...path, 'unit'];
   const classes = useStyles();
@@ -93,8 +135,24 @@ const ValueUnitField = props => {
     <div className={classes.control} >
       <FormLabel>{title}</FormLabel>
       <FormGroup row>
-        <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' data={data.value} nomargin />
-        <InputElement key={stringPath(unitPath)} {...unit} path={unitPath} givenTitle='Unit' data={data.unit} />
+        <InputElement
+          key={stringPath(valuePath)}
+          {...value}
+          path={valuePath}
+          givenTitle='Value'
+          data={data.value}
+          nomargin
+          required={required.includes('value')}
+        />
+        <InputElement
+          key={stringPath(unitPath)}
+          {...unit}
+          path={unitPath}
+          givenTitle='Unit'
+          data={data.unit}
+          nomargin
+          required
+        />
       </FormGroup>
       {
         description &&
@@ -109,14 +167,32 @@ const GroupContainer = props => {
   return <FormGroup className={classes.controlContainer} {...props} />
 }
 
+const Form = props => {
+  const methods = useForm();
+  const { onSubmit, ...propsRest } = props;
+  return (
+    <FormContext {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} autoComplete='off' {...propsRest} />
+    </FormContext>
+  )
+}
+
 class DynamicForm extends React.Component {
+  constructor(props) {
+    super(props);
+    const { schema, data } = props;
+    this.state = {
+      schema,
+      data
+    }
+  }
   render() {
-    const { schema, data } = this.props;
     return (
       <Container>
-        <form autoomplete='off'>
-          {this.expand(schema, data)}
-        </form>
+        <Form onSubmit={this.submitHandler}>
+          {this.expand(this.state.schema, this.state.data)}
+          <button type='submit' hidden />
+        </Form>
       </Container>
     )
   }
@@ -147,6 +223,9 @@ class DynamicForm extends React.Component {
       // If not an object, it should be already an input
       return <InputElement key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
     })
+  }
+  submitHandler = values => {
+    console.log(values);
   }
 }
 

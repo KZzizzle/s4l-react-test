@@ -50,6 +50,7 @@
     "react-checkbox-tree": "^1.5.1",
     "react-dev-utils": "^9.1.0",
     "react-dom": "^16.11.0",
+    "react-hook-form": "^3.28.3",
     "react-rnd": "^10.1.1",
     "react-router-dom": "^5.1.2",
     "resolve": "1.12.0",
