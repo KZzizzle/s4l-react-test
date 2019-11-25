@@ -3,7 +3,7 @@ import { TOGGLE_THEME } from "./constants";
 export const initialState = {
   theme: {
     palette: {
-      type: 'light'
+      type: 'dark'
     }
   }
 };

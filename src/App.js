@@ -27,8 +27,8 @@ class App extends React.Component {
       <ThemeProvider theme={createMuiTheme(this.props.theme)}>
         <CssBaseline />
         <Router>
-          {/* Top right corner (menu) */}
-          <Menu />
+          {/* Top right corner (menu) - toggle logic now in reducer*/}
+          <Menu /> 
           <Switch>
             <Route path='/form-demo'>
               <FormDemo />

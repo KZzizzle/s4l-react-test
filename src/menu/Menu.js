@@ -6,6 +6,7 @@ import { Brightness7, Brightness4, Code, Home } from '@material-ui/icons';
 import { toggleDarkModeHandler } from "../redux_stuff/actions";
 import { useTheme } from '@material-ui/core/styles';
 
+// toggle logic in rootReducer
 const mapDispatchToProps = dispatch => ({
   toggleDarkModeHandler: () => dispatch(toggleDarkModeHandler())
 });
