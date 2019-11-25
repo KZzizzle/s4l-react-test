@@ -70,10 +70,10 @@ const InputElement = props => {
         >
           {
             (title || givenTitle) &&
-            <InputLabel htmlFor={strPath}>{title || givenTitle}</InputLabel>
+            <InputLabel htmlFor={withArrayStringPath}>{title || givenTitle}</InputLabel>
           }
           <Input
-            id={strPath}
+            id={withArrayStringPath}
             defaultValue={data}
             inputProps={{
               ref: register({

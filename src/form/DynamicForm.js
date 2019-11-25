@@ -83,7 +83,7 @@ class DynamicForm extends React.Component {
     })
   }
   submitHandler = values => {
-    console.log(values);
+    console.log('Checking data:', values);
   }
 }
 
