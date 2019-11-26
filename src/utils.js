@@ -23,13 +23,13 @@ export const validationObject = props => {
   if (props.required) {
     ret.required = `${fieldName} required`.trim()
   }
-  if (props.minimum) {
+  if (typeof props.minimum !== 'undefined') {
     ret.min = {
       value: props.minimum,
       message: `${fieldName} < ${props.minimum}`.trim()
     }
   }
-  if (props.maximum) {
+  if (typeof props.maximum !== 'undefined') {
     ret.max = {
       value: props.maximum,
       message: `${fieldName} > ${props.maximum}`.trim()
