@@ -1,5 +1,5 @@
-import {  TOGGLE_THEME } from "./constants";
+import { TOGGLE_THEME } from './constants';
 
 export function toggleDarkModeHandler() {
-  return { type: TOGGLE_THEME}
+  return { type: TOGGLE_THEME }
 }

@@ -11,26 +11,25 @@ const initialState = {
   }
 };
 
-function themeReducer(themestate = initialState , action)  {
+// 'app' reducer
+function app(state = initialState, action)  {
   switch(action.type){
     case TOGGLE_THEME:
-      return Object.assign({}, themestate, {
+      return Object.assign({}, state, {
         theme: {
           palette: {
-            type: themestate.theme.palette.type === 'dark' ? 'light' : 'dark'
+            type: state.theme.palette.type === 'dark' ? 'light' : 'dark'
           }
         }
       });
     default:
-      return themestate;
+      return state;
   }
 };
 
 
-const rootReducer =
-  combineReducers({
-    themeR: themeReducer
+const rootReducer = combineReducers({
+  app
 });
 
 export default rootReducer;
-

@@ -18,13 +18,10 @@ import { connect } from 'react-redux';
 
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
-
+    const { theme } = this.props;
     return (
-      <ThemeProvider theme={createMuiTheme(this.props.theme)}>
+      <ThemeProvider theme={createMuiTheme(theme)}>
         <CssBaseline />
         <Router>
           {/* Top right corner (menu) - toggle logic now in reducer*/}
@@ -51,10 +48,8 @@ class App extends React.Component {
 }
 const mapStateToProps = state => {
   return {
-    theme: state.themeR.theme
+    theme: state.app.theme
   };
 }
 
 export default connect(mapStateToProps)(App);
-
-
