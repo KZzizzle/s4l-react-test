@@ -1,95 +1,56 @@
 import React from 'react';
 import {
-  TextField,
   Container,
-  FormControlLabel,
-  Checkbox,
   FormGroup,
-  FormLabel,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography,
-  FormHelperText
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import useForm, { FormContext } from 'react-hook-form';
+import { stringPath, isValueUnit } from '../utils';
+import InputElement from './InputElement';
+import ValueUnitField from './ValueUnitField';
 
 
-const InputElement = props => {
-  const { path, data, givenTitle, title, readOnly } = props;
-  const strPath = stringPath(path);
-  switch (props.type) {
-    case 'boolean':
-      return (
-        <FormControlLabel
-          control={
-            <Checkbox
-              value={strPath}
-              checked={data}
-              disabled={readOnly || false}
-            />
-          }
-          label={title}
-        />
-      )
-    case 'array':
-      return <ArrayField {...props} />;
-    default:
-      return (
-        <TextField
-          id={strPath}
-          label={title || givenTitle}
-          value={data}
-          margin='dense'
-          disabled={readOnly}
-        />
-      );
+const useStyles = makeStyles(theme => ({
+  controlContainer: {
+    marginBottom: theme.spacing(-1.5)
   }
+}));
+
+const GroupContainer = props => {
+  const classes = useStyles();
+  return <FormGroup className={classes.controlContainer} {...props} />
 }
 
-const ArrayField = props => {
+const Form = props => {
+  const methods = useForm();
+  const { onSubmit, ...propsRest } = props;
   return (
-    <div>
-      { props.title && props.title.length &&
-        <FormLabel>{props.title}</FormLabel>
-      }
-      <FormGroup row>
-        {
-          props.data.map((value, index) => (
-            <InputElement key={index} {...props} type='string' data={value} />
-          ))
-        }
-      </FormGroup>
-    </div>
-  )
-}
-
-const ValueUnitField = props => {
-  const { path, properties: { value, unit }, title, data, description } = props;
-  const valuePath = [...path, 'value'];
-  const unitPath = [...path, 'unit'];
-  return (
-    <div>
-      <FormLabel>{title}</FormLabel>
-      <FormGroup row>
-        <InputElement key={stringPath(valuePath)} {...value} path={valuePath} givenTitle='Value' data={data.value} />
-        <InputElement key={stringPath(unitPath)} {...unit} path={unitPath} givenTitle='Unit' data={data.unit} />
-      </FormGroup>
-      {
-        description &&
-        <FormHelperText>{description}</FormHelperText>
-      }
-    </div>
+    <FormContext {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} autoComplete='off' {...propsRest} />
+    </FormContext>
   )
 }
 
 class DynamicForm extends React.Component {
+  constructor(props) {
+    super(props);
+    const { schema, data } = props;
+    this.state = {
+      schema,
+      data
+    }
+  }
   render() {
-    const { schema, data } = this.props;
     return (
       <Container>
-        <form autoomplete='off'>
-          {this.expand(schema, data)}
-        </form>
+        <Form onSubmit={this.submitHandler}>
+          {this.expand(this.state.schema, this.state.data)}
+          <button type='submit' hidden />
+        </Form>
       </Container>
     )
   }
@@ -110,9 +71,9 @@ class DynamicForm extends React.Component {
               <Typography>{current.title || key}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <FormGroup>
+              <GroupContainer>
                 {this.expand(current.properties, currentData, newPath)}
-              </FormGroup>
+              </GroupContainer>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         );
@@ -121,14 +82,9 @@ class DynamicForm extends React.Component {
       return <InputElement key={stringPath(newPath)} {...current} path={newPath} data={currentData} />
     })
   }
-}
-
-// Util functions
-const stringPath = arrayPath => arrayPath.join('.')
-
-const isValueUnit = object => {
-  const keys = Object.keys(object.properties);
-  return keys.length === 2 && keys.includes('value') && keys.includes('unit');
+  submitHandler = values => {
+    console.log('Checking data:', values);
+  }
 }
 
 export default DynamicForm;
