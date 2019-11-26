@@ -14,8 +14,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ArrayField = props => {
-  const { title, ...propsRest } = props;
+  const { title, items, ...propsRest } = props;
   const classes = useStyles();
+  console.log(items)
   return (
     <div className={props.nomargin ? '' : classes.control} >
       { title && title.length &&
@@ -27,7 +28,7 @@ const ArrayField = props => {
             <InputElement
               key={index}
               {...propsRest}
-              type='string'
+              {...items}
               data={value}
               nomargin
               arrayIndex={index}

@@ -10,7 +10,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { useFormContext } from 'react-hook-form';
 import ArrayField from './ArrayField';
-import { stringPath } from '../utils';
+import { stringPath, htmlInputType, validationObject } from '../utils';
 
 const useStyles = makeStyles(theme => ({
   control: {
@@ -32,14 +32,14 @@ const InputElement = props => {
     readOnly,
     description,
     nomargin,
-    required = false,
-    arrayIndex = -1
+    arrayIndex = -1,
+    type
   } = props;
   const strPath = stringPath(path);
   const classes = useStyles();
   const { register, errors } = useFormContext();
-  const [value, setValue] = useState(data);
-  switch (props.type) {
+  const [value, setValue] = useState(typeof data !== 'undefined' ? data : props['default']);
+  switch (type) {
     case 'boolean':
       return (
         <FormControlLabel
@@ -76,11 +76,11 @@ const InputElement = props => {
             id={withArrayStringPath}
             defaultValue={data}
             inputProps={{
-              ref: register({
-                required: required && 'Required'
-              }),
-              name: withArrayStringPath
+              ref: register(validationObject(props)),
+              name: withArrayStringPath,
+              step: 'any'
             }}
+            type={htmlInputType(type)}
           />
           {
             errors && errors[withArrayStringPath] &&
