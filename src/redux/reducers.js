@@ -1,7 +1,7 @@
 
 import { combineReducers } from 'redux';
 import { TOGGLE_THEME } from './constants';
-//import themeReducer from './themereducer';
+
 
 const initialState = {
   theme: {
@@ -11,39 +11,26 @@ const initialState = {
   }
 };
 
-
-function themeReducer(state = initialState , action)  {
+function themeReducer(themestate = initialState , action)  {
   switch(action.type){
     case TOGGLE_THEME:
-      return Object.assign({}, state, {
+      return Object.assign({}, themestate, {
         theme: {
           palette: {
-            type: state.themeR.theme.palette.type === 'dark' ? 'light' : 'dark'
+            type: themestate.theme.palette.type === 'dark' ? 'light' : 'dark'
           }
         }
       });
     default:
-      return state;
+      return themestate;
   }
 };
 
 
-function rootReducer(state = initialState, action) {
-  return {
-    themeR: themeReducer(state, action)
-  }
-};
-
-// const rootReducer =
-//   combineReducers({
-//     themeR: themeReducer
-// });
-
-// function rootReducer() { 
-//   combineReducers({
-//     themeR : themeReducer
-// })
-// }
+const rootReducer =
+  combineReducers({
+    themeR: themeReducer
+});
 
 export default rootReducer;
 
