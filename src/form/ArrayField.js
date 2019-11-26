@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
 const ArrayField = props => {
   const { title, items, ...propsRest } = props;
   const classes = useStyles();
-  console.log(items)
   return (
     <div className={props.nomargin ? '' : classes.control} >
       { title && title.length &&
