@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => {
-  return {themetype: state.theme.palette.type };
+  return {themetype: state.themeR.theme.palette.type };
 }
 
 const NavigationButton = props => {
