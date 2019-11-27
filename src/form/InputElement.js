@@ -15,6 +15,9 @@ import { stringPath, htmlInputType, validationObject } from '../utils';
 const useStyles = makeStyles(theme => ({
   control: {
     paddingBottom: theme.spacing(1.5)
+  },
+  single: {
+    marginBottom: theme.spacing(0.5)
   }
 }));
 
@@ -33,7 +36,8 @@ const InputElement = props => {
     description,
     nomargin,
     arrayIndex = -1,
-    type
+    type,
+    className
   } = props;
   const strPath = stringPath(path);
   const classes = useStyles();
@@ -54,7 +58,7 @@ const InputElement = props => {
               onChange={evt => setValue(evt.target.checked)}
             />
           }
-          className={nomargin ? '' : classes.control}
+          className={nomargin ? classes.single : classes.control}
           label={title}
         />
       )
@@ -62,15 +66,21 @@ const InputElement = props => {
       return <ArrayField {...props} />;
     default:
       const withArrayStringPath = strPath + (arrayIndex > -1 ? `[${arrayIndex}]` : '');
+      const classNames = [
+        nomargin ? classes.single : classes.control,
+        className
+      ].join(' ');
       return (
         <FormControl
-          className={nomargin ? '' : classes.control}
+          className={classNames}
           disabled={readOnly || false}
           error={(errors && errors[withArrayStringPath] && true) || false}
         >
           {
             (title || givenTitle) &&
-            <InputLabel htmlFor={withArrayStringPath}>{title || givenTitle}</InputLabel>
+            <InputLabel htmlFor={withArrayStringPath}>
+              {title || givenTitle}
+            </InputLabel>
           }
           <Input
             id={withArrayStringPath}

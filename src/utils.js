@@ -21,7 +21,7 @@ export const validationObject = props => {
   const ret = {};
   const fieldName = props.title || props.givenTitle || '';
   if (props.required) {
-    ret.required = `${fieldName} required`.trim()
+    ret.required = true;
   }
   if (typeof props.minimum !== 'undefined') {
     ret.min = {

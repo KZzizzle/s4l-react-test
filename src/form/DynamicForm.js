@@ -46,7 +46,7 @@ class DynamicForm extends React.Component {
   }
   render() {
     return (
-      <Container>
+      <Container fixed>
         <Form onSubmit={this.submitHandler}>
           {this.expand(this.state.schema, this.state.data)}
           <button type='submit' hidden />

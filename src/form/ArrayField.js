@@ -10,6 +10,10 @@ import InputElement from './InputElement';
 const useStyles = makeStyles(theme => ({
   control: {
     paddingBottom: theme.spacing(1.5)
+  },
+  label: {
+    display: 'inline-block',
+    marginBottom: theme.spacing(0.8)
   }
 }));
 
@@ -19,7 +23,7 @@ const ArrayField = props => {
   return (
     <div className={props.nomargin ? '' : classes.control} >
       { title && title.length &&
-        <FormLabel>{title}</FormLabel>
+        <FormLabel classes={{ root: classes.label }}>{title}</FormLabel>
       }
       <FormGroup row>
         {

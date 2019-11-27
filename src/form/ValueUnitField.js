@@ -12,6 +12,16 @@ import InputElement from './InputElement';
 const useStyles = makeStyles(theme => ({
   control: {
     paddingBottom: theme.spacing(1.5)
+  },
+  label: {
+    display: 'inline-block',
+    marginBottom: theme.spacing(0.8)
+  },
+  value: {
+    flex: 1
+  },
+  unit: {
+    maxWidth: '3.5em'
   }
 }));
 
@@ -22,7 +32,7 @@ const ValueUnitField = props => {
   const classes = useStyles();
   return (
     <div className={classes.control} >
-      <FormLabel>{title}</FormLabel>
+      <FormLabel classes={{ root: classes.label }}>{title}</FormLabel>
       <FormGroup row>
         <InputElement
           key={stringPath(valuePath)}
@@ -32,6 +42,7 @@ const ValueUnitField = props => {
           data={data.value}
           nomargin
           required={required.includes('value')}
+          className={classes.value}
         />
         <InputElement
           key={stringPath(unitPath)}
@@ -41,6 +52,7 @@ const ValueUnitField = props => {
           data={data.unit}
           nomargin
           required
+          className={classes.unit}
         />
       </FormGroup>
       {
