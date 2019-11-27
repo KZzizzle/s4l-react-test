@@ -37,6 +37,45 @@ components:
     Tools:
       name: Tools
       summary: Updates the list of available tools
-      payload: 
-      description:
-      examples:
+      payload:
+        type: object
+        required:
+          - tools
+        properties:
+          tools:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/Tool'
+                - $ref: '#/components/schemas/ToolCategory'
+    # Client
+    ToolSelect:
+      name: ToolSelect
+  schemas:
+    Tool:
+      type: object
+      required:
+        - id
+        - label
+        - tooltip
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        tooltip:
+          type: string
+    ToolCategory:
+      type: object
+      required:
+        - name
+        - tools
+      properties:
+        name:
+          type: string
+        tools:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/Tool'
+              - $ref: '#/components/schemas/ToolCategory'
