@@ -14,25 +14,18 @@ import Menu from './menu/Menu';
 import FormDemo from './form/FormDemo'
 
 import ToolMenu from './tool/ToolMenu'
+import { connect } from 'react-redux';
+
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      theme: {
-        palette: {
-          type: 'dark'
-        }
-      }
-    }
-  }
   render() {
+    const { theme } = this.props;
     return (
-      <ThemeProvider theme={createMuiTheme(this.state.theme)}>
+      <ThemeProvider theme={createMuiTheme(theme)}>
         <CssBaseline />
         <Router>
-          {/* Top right corner (menu) */}
-          <Menu toggleDarkModeHandler={this.toggleDarkMode} />
+          {/* Top right corner (menu) - toggle logic now in reducer*/}
+          <Menu /> 
           <Switch>
             <Route path='/form-demo'>
               <FormDemo />
@@ -41,9 +34,9 @@ class App extends React.Component {
               {/* Full screen modeler */}
               <RemoteView />
               {/* Top buttons (tools) */}
-              <ToolMenu className="tool-menu" />
+              <ToolMenu className='tool-menu' />
               {/* Tree */}
-              <Window title="Tree" rndConfig={{ default: { width: 300, height: 400, x: 10, y: 10 } }}>
+              <Window title='Tree' rndConfig={{ default: { width: 300, height: 400, x: 10, y: 10 } }}>
                 <SampleTree />
               </Window>
             </Route>
@@ -52,15 +45,11 @@ class App extends React.Component {
       </ThemeProvider>
     );
   }
-  toggleDarkMode = () => {
-    this.setState(state => ({
-      theme: {
-        palette: {
-          type: state.theme.palette.type === 'dark' ? 'light' : 'dark'
-        }
-      }
-    }))
-  }
+}
+const mapStateToProps = state => {
+  return {
+    theme: state.app.theme
+  };
 }
 
-export default App;
+export default connect(mapStateToProps)(App);
