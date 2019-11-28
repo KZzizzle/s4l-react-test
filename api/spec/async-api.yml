@@ -76,14 +76,12 @@ components:
       payload:
         type: object
         required:
-          - tools
+          - actions
         properties:
-          tools:
+          actions:
             type: array
             items:
-              anyOf:
-                - $ref: '#/components/schemas/Tool'
-                - $ref: '#/components/schemas/ToolCategory'
+              $ref: '#/components/schemas/Tool'
     properties:
       name: properties
       summary: Updates de list of properties and their values, for the selected tool.
@@ -252,9 +250,7 @@ components:
         tools:
           type: array
           items:
-            anyOf:
-              - $ref: '#/components/schemas/Tool'
-              - $ref: '#/components/schemas/ToolCategory'
+            $ref: '#/components/schemas/Tool'
     Options:
       type: object
     Properties:
@@ -273,9 +269,8 @@ components:
           $ref: '#/components/schemas/ScreenPosition'
         value:
           type:
-            oneOf:
-              - string
-              - number
+            - string
+            - number
         unit:
           type: string
     ScreenPosition:
