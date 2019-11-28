@@ -13,7 +13,7 @@ const nodes = [{
   label: 'Electrode',
   value: 5,
   children: [{
-    label: 'Cilinder',
+    label: 'Cylinder',
     value: 6,
     children: [{
       label: 'Shape1',
