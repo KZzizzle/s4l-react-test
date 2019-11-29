@@ -59,11 +59,17 @@ class RemoteView extends React.Component {
         onMouseMove={this.mouseHandler}
         onWheel={this.mouseHandler}
         onMouseEnter={this.mouseHandler}
-        onMouseLeave={this.mouseHandler}>
+        onMouseLeave={this.mouseHandler}
+        onKeyDown={this.keyboardHandler}
+      >
         <RemoteRender src={this.state.src}/>
         <RemotePositioned />
       </div>
     );
+  }
+
+  keyboardHandler = evt => {
+    console.log(evt.key, evt.ctrlKey);
   }
 
   mouseHandler = evt => {

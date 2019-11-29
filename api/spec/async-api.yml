@@ -1,0 +1,323 @@
+asyncapi: 2.0.0
+info:
+  title: Sim4Web application
+  version: 0.0.0
+servers:
+  development:
+    url: 172.16.9.154:8080
+    protocol: ws
+    description: S4L Server
+channels:
+  socket.io:
+    ##
+    # Defined from the perspective of the client.
+    ##
+    subscribe:
+      summary: List of server messages
+      message:
+        oneOf:
+          - $ref: '#/components/messages/tools'
+          - $ref: '#/components/messages/actions'
+          - $ref: '#/components/messages/options'
+          - $ref: '#/components/messages/properties'
+          - $ref: '#/components/messages/modelEntities'
+          - $ref: '#/components/messages/render'
+    publish:
+      summary: List of client messages
+      message:
+        oneOf:
+          - $ref: '#/components/messages/toolSelect'
+          - $ref: '#/components/messages/actionSelect'
+          - $ref: '#/components/messages/optionChange'
+          - $ref: '#/components/messages/propertyChange'
+          - $ref: '#/components/messages/modelEntitySelect'
+          - $ref: '#/components/messages/mouseInput'
+          - $ref: '#/components/messages/keyboardInput'
+components:
+  messages:
+    # Server
+    tools:
+      name: tools
+      summary: Updates the list of available tools.
+      description: >
+        Tools are retreived when the client starts and connects and can be hierarchically
+        organised in categories.
+      payload:
+        type: object
+        required:
+          - tools
+        properties:
+          tools:
+            type: array
+            items:
+              anyOf:
+                - $ref: '#/components/schemas/Tool'
+                - $ref: '#/components/schemas/ToolCategory'
+    options:
+      name: options
+      summary: Sends the list of options and their values, for the selected tool.
+      description: >
+        When a tool is selected, its options are displayed to the user.
+        These options can be modified from the user (``optionChange`` event),
+        but also the server can update them.
+      payload:
+        type: object
+        required:
+         - options
+        properties:
+          options:
+            $ref: '#/components/schemas/Options'
+    actions:
+      name: actions
+      summary: Updates the list of available actions for the tool
+      description: >
+        Some tools can display a set of actions that correlate to tool options, but are
+        displayed differently.
+      payload:
+        type: object
+        required:
+          - actions
+        properties:
+          actions:
+            type: array
+            items:
+              $ref: '#/components/schemas/Tool'
+    properties:
+      name: properties
+      summary: Updates de list of properties and their values, for the selected tool.
+      description: >
+        When a model entity is selected, its properties are displayed to the user.
+        These options can be modified from the user (``propertyChange`` event),
+        but also the server can update them.
+      payload:
+        type: object
+        required:
+         - properties
+        properties:
+          properties:
+            $ref: '#/components/schemas/Properties'
+    modelEntities:
+      name: modelEntities
+      summary: Model entities tree.
+      description: >
+        Contains all the necessary information to build the model entity tree.
+      payload:
+        type: object
+        required:
+          - modelEntities
+        properties:
+          modelEntities:
+            $ref: '#/components/schemas/ModelEntities'
+    render:
+      name: render
+      summary: Transmits a new renderer image of the modeler to the client.
+      description: >
+        Remote update of the modeler view with a new rendered image. This optionally includes
+        a set of ``OverlayMeasure``s that have to be rendered on top of the model at the given
+        coordinates.
+      payload:
+        type: object
+        required:
+          - renderImage
+        properties:
+          renderImage:
+            $ref: '#/components/schemas/RenderImage'
+          overlayMeasures:
+            type: array
+            items:
+              $ref: '#/components/schemas/OverlayMeasure'
+    # Client
+    toolSelect:
+      name: toolSelect
+      summary: User selects a tool.
+      description: >
+        Event sent when the user selects a tool. After that, a new ``Tools`` event
+        is expected from the server to confirm that selection. An ``Options`` and possibly
+        ``Actions`` events are also expected.
+      payload:
+        type: object
+        required:
+          - id
+        properties:
+          id:
+            type: string
+    actionSelect:
+      name: actionSelect
+      summary: User selects an action.
+      description: >
+        Event sent when the user selects an action. After that, a new ``Actions`` event
+        is expected from the server to confirm that selection. Actions are linked to tool options
+        so maybe an ``Options`` should be expected.
+      payload:
+        type: object
+        required:
+          - id
+        properties:
+          id:
+            type: string
+    optionChange:
+      name: optionChange
+      summary: User changes a tool option value.
+      description: >
+        Sent when the user changes a field in the tool options form. A new ``Options`` message
+        confirms the modification.
+      payload:
+        type: object
+        required:
+          - id
+          - path
+          - value
+        properties:
+          id:
+            type: string
+          path:
+            type: string
+          value:
+            type: {}
+    propertyChange:
+      name: propertyChange
+      summary: User changes a model entity property value.
+      description: >
+        Sent when the user changes a field in the model entity properties form.
+        A new ``Properties`` message confirms the modification.
+      payload:
+        type: object
+        required:
+          - id
+          - path
+          - value
+        properties:
+          id:
+            type: string
+          path:
+            type: string
+          value:
+            type: {}
+    modelEntitySelect:
+      name: modelEntitySelect
+      summary: User selects one or several model entities
+      description: >
+        Sent when the user changes the selection of model entities.
+      payload:
+        type: object
+        required:
+          - selectedIds
+        properties:
+          selectedIds:
+            type: array
+            items:
+              type: string
+    mouseInput:
+      name: mouseInput
+      summary: Sends a mouse user input.
+      payload:
+        $ref: '#/components/schemas/MouseInput'
+    keyboardInput:
+      name: keyboardInput
+      summary: Sends a keyboard user input.
+      payload:
+        $ref: '#/components/schemas/KeyboardInput'
+  schemas:
+    Tool:
+      type: object
+      required:
+        - id
+        - label
+        - tooltip
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        tooltip:
+          type: string
+        selected:
+          type: boolean
+          default: false
+        enabled:
+          type: boolean
+          default: true
+        icon:
+          type: string
+    ToolCategory:
+      type: object
+      required:
+        - name
+        - tools
+      properties:
+        name:
+          type: string
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tool'
+    Options:
+      type: object
+    Properties:
+      type: object
+    RenderImage:
+      type: object
+    OverlayMeasure:
+      type: object
+      required:
+        - id
+        - pos
+        - value
+        - unit
+      properties:
+        pos:
+          $ref: '#/components/schemas/ScreenPosition'
+        value:
+          type:
+            - string
+            - number
+        unit:
+          type: string
+    ScreenPosition:
+      type: object
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: integer
+        y:
+          type: integer
+    ModelEntities:
+      type: object
+    MouseInput:
+      type: object
+      required:
+        - pos
+        - type
+      properties:
+        pos:
+          $ref: '#/components/schemas/ScreenPosition'
+        type:
+          type: string
+          enum:
+            - mouseup
+            - mousedown
+            - mousemove
+            - wheel
+        altKey:
+          type: boolean
+        shiftKey:
+          type: boolean
+        ctrlKey:
+          type: boolean
+        button:
+          type: integer
+    KeyboardInput:
+      type: object
+      required:
+        - key
+      properties:
+        key:
+          type: string
+        altKey:
+          type: boolean
+        shiftKey:
+          type: boolean
+        ctrlKey:
+          type: boolean
