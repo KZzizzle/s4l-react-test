@@ -14,33 +14,33 @@ const useStyles = makeStyles(theme => ({
   label: {
     display: 'inline-block',
     marginBottom: theme.spacing(0.8)
+  },
+  input: {
+    flex: 1
   }
 }));
 
 const ArrayField = props => {
   const { title, items, ...propsRest } = props;
   const classes = useStyles();
-  return (
-    <div className={props.nomargin ? '' : classes.control} >
-      { title && title.length &&
-        <FormLabel classes={{ root: classes.label }}>{title}</FormLabel>
-      }
-      <FormGroup row>
-        {
-          props.data.map((value, index) => (
-            <InputElement
-              key={index}
-              {...propsRest}
-              {...items}
-              data={value}
-              nomargin
-              arrayIndex={index}
-            />
-          ))
-        }
-      </FormGroup>
+  const inputs = props.data.map((value, index) =>
+  (
+    <InputElement
+      key={index}
+      {...propsRest}
+      {...items}
+      data={value}
+      nomargin
+      arrayIndex={index}
+      className={classes.input}
+    />
+  ));
+  return title && title.length ? (
+    <div className={props.nomargin ? '' : classes.control}>
+      <FormLabel classes={{ root: classes.label }}>{title}</FormLabel>
+      <FormGroup row children={inputs} />
     </div>
-  )
+  ) : inputs;
 }
 
 export default ArrayField;
