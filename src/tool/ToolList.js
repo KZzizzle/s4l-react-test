@@ -3,25 +3,33 @@
 const Tool0 = {
     id: 'tool0',
     label: 'triangle',
-    tooltip: 'pyramid of Egypt'
+    tooltip: 'pyramid of Egypt',
+    icon: 'triangle',
+    selected: false
 };
 
 const Tool1 = {
     id: 'tool1',
     label: 'square',
-    tooltip: 'Prism'
+    tooltip: 'Prism',
+    icon: 'square',
+    selected: false
 };
 
 const Tool2 = {
     id: 'tool2',
     label: 'circle',
-    tooltip: 'Circle'
+    tooltip: 'Circle',
+    icon: 'circle',
+    selected: false
 };
 
 const Tool3 = {
     id: 'tool3',
     label: 'squiggle',
-    tooltip: 'Spline'
+    tooltip: 'Spline',
+    icon: 'squiggle',
+    selected: false
 };
 
 const ToolCategory0 = {
@@ -32,7 +40,7 @@ const ToolCategory0 = {
     ]
 };
 
-export const Tools = [
+export const ToolList = [
     Tool2,
     Tool3,
     ToolCategory0

@@ -2,8 +2,9 @@ import React from 'react';
 import './ToolMenu.css';
 import { Stop, ChangeHistory, FiberManualRecord, Timeline } from '@material-ui/icons';
 import { IconButton, Box, Tooltip, Select, MenuItem } from '@material-ui/core';
-import { Tools } from './Tool'
+import { ToolList } from './ToolList'
 
+// Assign icon based on Tool property
 const AppropriateIcon = props => {
   switch (props.toolName) {
     case 'triangle':
@@ -19,16 +20,18 @@ const AppropriateIcon = props => {
   }
 };
 
+// Render each tool icon
 const MakeTool = props => {
   return (
     <Tooltip title = {props.tool.tooltip}>
       <IconButton>
-        <AppropriateIcon toolName = {props.tool.label} />
+        <AppropriateIcon toolName = {props.tool.icon} />
       </IconButton>
     </Tooltip>
   )
 }
 
+// Render a tool category
 const MakeToolCategory = props => {
   return (
     <Tooltip>
@@ -47,13 +50,13 @@ const MakeToolCategory = props => {
   )
 }
 
+// Render tool or category, depending on whether property "name" is defined
 function ToolMenu(props) {
-  const numtools = Tools.length;
-  console.log(Tools.length)
+  console.log(ToolList.length)
   return (
     <Box className={props.className}>
-      { Tools.map(entry => {
-          if (entry.name ==undefined) {
+      { ToolList.map(entry => {
+          if (entry.name == undefined) {
             return(<MakeTool tool = {entry} />)
           }
           else {
